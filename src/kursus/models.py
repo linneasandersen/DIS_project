@@ -9,7 +9,7 @@ def load_user(email):
     cur = conn.cursor()
 
     user_sql = sql.SQL("""
-    SELECT * FROM user
+    SELECT * FROM usertable
     WHERE email = %s
     """)
 
@@ -24,8 +24,10 @@ class User(tuple, UserMixin):
         self.email = user_data[0]
         self.password = user_data[1]
 
-    def get_email(self):
+    def get_id(self):
        return (self.email)
+    
+    
 
 class Customers(tuple, UserMixin):
     def __init__(self, user_data):
@@ -69,6 +71,8 @@ class Transfers(tuple):
         self.amount = user_data[1]
         self.transfer_date = user_data[2]
 
+
+
 def insert_Customers(name, CPR_number, password):
     cur = conn.cursor()
     sql = """
@@ -76,6 +80,16 @@ def insert_Customers(name, CPR_number, password):
     VALUES (%s, %s, %s)
     """
     cur.execute(sql, (name, CPR_number, password))
+    # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
+    conn.commit()
+    cur.close()
+def insert_User(email, password):
+    cur = conn.cursor()
+    sql = """
+    INSERT INTO usertable(email, password)
+    VALUES (%s, %s)
+    """
+    cur.execute(sql, (int(email), int(password)))
     # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
     conn.commit()
     cur.close()
@@ -94,7 +108,7 @@ def select_Customers(CPR_number):
 def select_User(email):
     cur = conn.cursor()
     sql = """
-    SELECT * FROM "user"
+    SELECT * FROM usertable
     WHERE email = %s
     """
     cur.execute(sql, (email,))

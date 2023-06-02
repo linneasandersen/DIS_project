@@ -1,13 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
-class NewUserForm(FlaskForm):
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=2, max=20)])
-    CPR_number = IntegerField('CPR_number',
-                        validators=[DataRequired()])
+
+class RegisterForm(FlaskForm):
+    email = IntegerField('E-mail', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Add')
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Register')
 
 
 class UserLoginForm(FlaskForm):

@@ -60,7 +60,8 @@
 
                 <a class="nav-item nav-link" href="{{ url_for('Login.logout') }}">Logout</a>
               {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('Login.login') }}">Login</a>
+              <a class="nav-item nav-link" href="{{ url_for('Login.register') }}">Register</a>
+              <a class="nav-item nav-link" href="{{ url_for('Login.login') }}">Login</a>
               {% endif %}
             </div>
           </div>
