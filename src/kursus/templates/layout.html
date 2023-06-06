@@ -83,10 +83,10 @@
           {% block content %}{% endblock %}
         </div>
         <!-- Right Side box-->
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <div class="content-section">
             <h3>Account</h3>
-              <ul class="list-group">
+              <ul class="list-group"> -->
               {% if current_user.is_authenticated %}
 
 			   {% if "customer" == role %}
@@ -109,10 +109,10 @@
  			      {% endif %}
 
 
-               <li class="list-group-item list-group-item-light">etc</li>
+               <!-- <li class="list-group-item list-group-item-light">etc</li> -->
 
               {% else %}
-                <li class="list-group-item list-group-item-light">etc</li>
+                <!-- <li class="list-group-item list-group-item-light">etc</li> -->
               {% endif %}
               </ul>
             </p>

@@ -83,13 +83,26 @@ def insert_Customers(name, CPR_number, password):
     # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
     conn.commit()
     cur.close()
+
 def insert_User(email, password):
     cur = conn.cursor()
     sql = """
-    INSERT INTO usertable(email, password)
+    INSERT INTO "user"
     VALUES (%s, %s)
     """
-    cur.execute(sql, (int(email), int(password)))
+    cur.execute(sql, (email, password))
+    # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
+    conn.commit()
+    cur.close()
+
+def insert_Student(name, field, level, email):
+    cur = conn.cursor()
+    print(name, field, level, email)
+    sql = """
+    INSERT INTO student (name, studies, bsc_msc, no_of_reviews, email)
+    VALUES (%s, %s,%s,0,%s)
+    """
+    cur.execute(sql, (name,field,level,email))
     # Husk commit() for INSERT og UPDATE, men ikke til SELECT!
     conn.commit()
     cur.close()
@@ -108,7 +121,7 @@ def select_Customers(CPR_number):
 def select_User(email):
     cur = conn.cursor()
     sql = """
-    SELECT * FROM usertable
+    SELECT * FROM user
     WHERE email = %s
     """
     cur.execute(sql, (email,))

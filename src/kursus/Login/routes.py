@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from kursus import app, conn, bcrypt
 from kursus.forms import UserLoginForm, RegisterForm
 from flask_login import login_user, current_user, logout_user, login_required
-from kursus.models import select_User, User, insert_User
+from kursus.models import select_User, User, insert_User, insert_Student
 from kursus.models import select_cus_accounts
 #202212
 from kursus import roles, mysession
@@ -16,7 +16,11 @@ posts = [{}]
 @Login.route('/register', methods=('GET', 'POST'))
 def register():
     form = RegisterForm()
-    if form.validate_on_submit():
+    if request.method == 'GET':
+        print("res")
+
+    if request.method == 'POST':
+        print("res2")
         
         user = User([form.email.data, form.password.data])
 
@@ -24,21 +28,22 @@ def register():
         # Her checkes om der er logget på
         # if user != None and bcrypt.check_password_hash(user[1], form.password.data):
         if user != None:
+            print("valid user")
+            print(form.field.data)
             mysession["email"] = form.email.data
             mysession["password"] = form.password.data
             print(mysession)
             insert_User(form.email.data,form.password.data)
-            flash('register  successful.','success')
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('Login.home'))
+            insert_Student(form.name.data,form.field.data,form.level.data,form.email.data)
+            flash('Register successful.','success')
+            return redirect(url_for('Login.home'))
         else:
             flash('Login Unsuccessful. Please check identifier and password', 'danger')
-    return render_template('login.html', title='Login', form=form
-    )
+
+    return render_template('register.html', title='Login', form=form)
     
    
-
-
+@Login.route('/home', methods=('GET', 'POST'))
 @Login.route("/")
 @Login.route("/home")
 def home():
