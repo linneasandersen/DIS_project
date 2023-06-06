@@ -1,8 +1,10 @@
+from django.shortcuts import render
+from multiprocessing import context
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from kursus import app, conn, bcrypt
 from kursus.forms import UserLoginForm, RegisterForm
 from flask_login import login_user, current_user, logout_user, login_required
-from kursus.models import select_User, User, insert_User, insert_Student
+from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student
 from kursus.models import select_cus_accounts
 #202212
 from kursus import roles, mysession
@@ -12,6 +14,12 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 posts = [{}]
+
+@Login.route('/profile', methods=('GET', 'POST'))
+@login_required
+def profile():
+    student = select_Student(current_user.email)
+    return render_template('profile.html', name=student.get_name()) 
 
 @Login.route('/register', methods=('GET', 'POST'))
 def register():
@@ -36,7 +44,7 @@ def register():
             insert_User(form.email.data,form.password.data)
             insert_Student(form.name.data,form.field.data,form.level.data,form.email.data)
             flash('Register successful.','success')
-            return redirect(url_for('Login.home'))
+            return redirect(url_for('Login.login'))
         else:
             flash('Login Unsuccessful. Please check identifier and password', 'danger')
 
@@ -53,8 +61,10 @@ def home():
     #202212
     role =  mysession["role"]
     print('role: '+ role)
+    dis_courses = get_reviewed_courses()
+    courses = map(lambda course: course[0], dis_courses)
 
-    return render_template('home.html', posts=posts, role=role)
+    return render_template('home.html', courses=courses)
 
 
 @Login.route("/about")
@@ -82,7 +92,7 @@ def login():
     form = UserLoginForm()
 
     # Først bekræft, at inputtet fra formen er gyldigt... (f.eks. ikke tomt)
-    if form.validate_on_submit():
+    if request.method == 'POST':
 
         #"202212"
         # her checkes noget som skulle være sessionsvariable, men som er en GET-parameter
@@ -110,8 +120,7 @@ def login():
 
             login_user(user, remember=form.remember.data)
             flash('Login successful.','success')
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('Login.home'))
+            return redirect(url_for('Login.profile'))
         else:
             flash('Login Unsuccessful. Please check identifier and password', 'danger')
     #202212
@@ -130,10 +139,7 @@ def login():
     #return render_template('login.html', title='Login', is_employee=is_employee, form=form)
     return render_template('login.html', title='Login', form=form
     )
-#teachers={{"id": str(1234), "name":"anders"},}
-#data={"user_id": str(user_id), "total_trials":total_trials}
 
-    #hvor gemmes login-bruger-id?
 
 @Login.route("/logout")
 def logout():
@@ -145,16 +151,3 @@ def logout():
     return redirect(url_for('Login.home'))
 
 
-# @Login.route("/account")
-# @login_required
-# def account():
-#     mysession["state"]="account"
-#     print(mysession)
-#     # role =  mysession["role"]
-#     # print('role: '+ role)
-
-#     accounts = select_cus_accounts(current_user.get_id())
-#     print(accounts)
-#     return render_template('account.html', title='Account'
-#     , acc=accounts, role=role
-#     )

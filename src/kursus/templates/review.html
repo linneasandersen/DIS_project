@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+  <div class="course-container">
+    <h1>{{ course.title }}</h1>
+    <p>Course Code: {{ course.code }}</p>
+    <p>Description: {{ course.description }}</p>
+    <!-- Add more course details as needed -->
+  </div>
+{% endblock %}
