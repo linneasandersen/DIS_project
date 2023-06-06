@@ -147,6 +147,16 @@ def get_Course(name, year):
     course = Course(cur.fetchone()) if cur.rowcount > 0 else None;
     return course
 
+def get_Course_id(name):
+    cur = conn.cursor()
+    sql = """
+    SELECT DISTINCT course_id FROM COURSE
+    WHERE "title english" = %s
+    """
+    cur.execute(sql, (name))
+    course_id = cur.fetchone() if cur.rowcount > 0 else None;
+    return course_id
+
 def insert_Review(author_id, course_id, year, title, text, date, helpfulness, easiness, clarity, workload, avg_rating):
     cur = conn.cursor()
     sql = """
@@ -159,7 +169,16 @@ def insert_Review(author_id, course_id, year, title, text, date, helpfulness, ea
     conn.commit()
     cur.close()
 
-
+def get_reviews(id):
+    cur = conn.cursor()
+    sql = """
+    SELECT * FROM review
+    WHERE course_id = %s
+    """
+    cur.execute(sql, (id))
+    reviews = cur.fetchall if cur.rowcount > 0 else None;
+    return reviews
+    
 def insert_Customers(name, CPR_number, password):
     cur = conn.cursor()
     sql = """

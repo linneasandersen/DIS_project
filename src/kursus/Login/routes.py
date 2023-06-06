@@ -2,7 +2,7 @@ from django.shortcuts import render
 from multiprocessing import context
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from kursus import app, conn, bcrypt
-from kursus.forms import UserLoginForm, RegisterForm
+from kursus.forms import UserLoginForm, RegisterForm, SelectCourseForm
 from flask_login import login_user, current_user, logout_user, login_required
 from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student
 from kursus.models import select_cus_accounts
@@ -64,7 +64,7 @@ def home():
     dis_courses = get_reviewed_courses()
     courses = map(lambda course: course[0], dis_courses)
 
-    return render_template('home.html', courses=courses)
+    return render_template('home.html', courses = courses)
 
 
 @Login.route("/about")

@@ -30,7 +30,8 @@ class WriteReviewForm(FlaskForm):
 
 
 
-
+class SelectCourseForm(FlaskForm):
+        course = SelectField('Course Name',  choices=[], validators=[DataRequired()])
 class TransferForm(FlaskForm):
     amount = IntegerField('amount', 
                         validators=[DataRequired()])
