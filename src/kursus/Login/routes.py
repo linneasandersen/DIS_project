@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from kursus import app, conn, bcrypt
 from kursus.forms import UserLoginForm, RegisterForm, SelectCourseForm
 from flask_login import login_user, current_user, logout_user, login_required
-from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student
+from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student, get_Course, get_Course_id, get_reviews
 from kursus.models import select_cus_accounts
 #202212
 from kursus import roles, mysession
@@ -108,35 +108,14 @@ def login():
         if user != None:
             mysession["email"] = form.email.data
             print(mysession)
-            #202212
-            ####### print("role:" + user.role)
-            # if user.role == 'employee':
-            #     mysession["role"] = roles[1] #employee
-            # elif user.role == 'customer':
-            #     mysession["role"] = roles[2] #customer
-            # else:
-            #     mysession["role"] = roles[0] #ingen
-            #print(roles)
+
 
             login_user(user, remember=form.remember.data)
             flash('Login successful.','success')
             return redirect(url_for('Login.profile'))
         else:
             flash('Login Unsuccessful. Please check identifier and password', 'danger')
-    #202212
-    #Get lists of employees and customers
-    # teachers = [{"id": str(6234), "name":"anders. teachers with 6."}, {"id": str(6214), "name":"simon"},
-    #             {"id": str(6862), "name":"dmitry"}, {"id": str(6476), "name":"finn"}]
-    # parents =  [{"id": str(4234), "name":"parent-anders. parents with 4."}, {"id": str(4214), "name":"parent-simon"},
-    #             {"id": str(4862), "name":"parent-dmitry"}, {"id": str(4476), "name":"parent-finn"}]
-    # students = [{"id": str(5234), "name":"student-anders. students with 5."}, {"id": str(5214), "name":"student-simon"},
-    #             {"id": str(5862), "name":"student-dmitry"}, {"id": str(5476), "name":"student-finn"}]
 
-    #202212
-    # role =  mysession["role"]
-    # print('role: '+ role)
-
-    #return render_template('login.html', title='Login', is_employee=is_employee, form=form)
     return render_template('login.html', title='Login', form=form
     )
 
@@ -151,3 +130,11 @@ def logout():
     return redirect(url_for('Login.home'))
 
 
+@Login.route('/course', methods=['GET', 'POST'])
+def course_page():
+    if request.method == 'POST':
+        form = SelectCourseForm()
+        course_id = get_Course(form.course.data, '21/22')
+        reviews = get_reviews(course_id)
+        print(reviews)
+    return render_template('review.html', title = form.course.data, code = course_id)

@@ -173,12 +173,13 @@ def get_reviews(id):
     cur = conn.cursor()
     sql = """
     SELECT * FROM review
-    WHERE course_id = %s
+    WHERE course_id = '%s'
     """
     cur.execute(sql, (id))
     reviews = cur.fetchall if cur.rowcount > 0 else None;
     return reviews
-    
+
+
 def insert_Customers(name, CPR_number, password):
     cur = conn.cursor()
     sql = """
