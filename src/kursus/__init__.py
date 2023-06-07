@@ -31,9 +31,9 @@ login_manager.login_message_category = 'info'
 
 #202212
 roles = ["ingen","employee","customer"]
-print(roles)
+#print(roles)
 mysession = {"state" : "initializing","role" : "Not assigned", "id": 0 ,"age" : 202212}
-print(mysession)
+#print(mysession)
 
 from kursus.Login.routes import Login
 from kursus.User.routes import User

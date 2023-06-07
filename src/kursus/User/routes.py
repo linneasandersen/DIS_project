@@ -31,6 +31,9 @@ def write():
         email = current_user.get_id()
         student = select_Student(email)
         course = get_Course(form.course.data, form.year.data)
+        if course == None: 
+            flash('Course was not held this year', 'danger')
+            return redirect(url_for('User.write'))
         r = Review([student.get_id(), course.get_id(), form.year.data, form.title.data,
                     form.text.data, 0, 0, datetime.date.today(), form.helpfulness.data, form.easiness.data,
                     form.clarity.data, form.workload.data, calcAvgScore(form)])

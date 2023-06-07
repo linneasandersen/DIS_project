@@ -1,36 +1,35 @@
-
-
 {% extends 'layout.html' %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-  <form action="/course" method="post">
-    <div class="form-group">
-      <label for="course">Choose Course:</label>
-      <select name="course" id="course">
-        <option value="">Select a course</option>
-        {% for course in courses %}
-          <option value="{{ course }}">{{ course }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="form-group">
-      <input type="submit" value="Submit" class="btn">
-    </div>
-  </form>
-
+  <div class="home-container">
+    <h1>Welcome to KU Course Reviewer</h1>
+    <form action="/course" method="post" class="search-form">
+      <div class="form-group">
+        <label for="course">See Reviews of:</label>
+        <select name="course" id="course">
+          <option value="">Select a course</option>
+          {% for course in courses %}
+            <option value="{{ course }}">{{ course }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Submit" class="btn">
+      </div>
+    </form>
+  </div>
 
   <style>
     .home-container {
       text-align: center;
-      margin-top: 100px;
+      margin-top: 200px;
+      width: 1000px;
     }
 
     .search-form {
-      display: flex;
-      justify-content: center;
       margin-top: 20px;
+      display: flex; /* Added flex display */
+      justify-content: center; /* Center horizontally */
     }
 
     .search-form label {
@@ -42,6 +41,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 16px;
+      margin-right: 10px;
     }
 
     .search-form button {

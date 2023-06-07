@@ -149,13 +149,17 @@ def get_Course(name, year):
 
 def get_Course_id(name):
     cur = conn.cursor()
-    sql = """
-    SELECT DISTINCT course_id FROM COURSE
-    WHERE "title english" = %s
-    """
+    sql = f"SELECT DISTINCT course_id FROM COURSE WHERE" + """ "title english" """ +  f"= '{name}'"
     cur.execute(sql, (name))
     course_id = cur.fetchone() if cur.rowcount > 0 else None;
     return course_id
+
+def obtain_avg(param, c_id):
+    cur = conn.cursor()
+    sql = f"SELECT AVG({param}) FROM review WHERE course_id = '{c_id}'"
+    cur.execute(sql)
+    avg_scores = cur.fetchone() if cur.rowcount > 0 else None;
+    return avg_scores
 
 def insert_Review(author_id, course_id, year, title, text, date, helpfulness, easiness, clarity, workload, avg_rating):
     cur = conn.cursor()
@@ -169,16 +173,13 @@ def insert_Review(author_id, course_id, year, title, text, date, helpfulness, ea
     conn.commit()
     cur.close()
 
-def get_reviews(id):
+def get_reviews(course_id):
     cur = conn.cursor()
-    sql = """
-    SELECT * FROM review
-    WHERE course_id = '%s'
-    """
-    cur.execute(sql, (id))
-    reviews = cur.fetchall if cur.rowcount > 0 else None;
+    sql = f"SELECT * FROM review WHERE course_id = '{course_id}'"
+    cur.execute(sql)
+    reviews = cur.fetchall() if cur.rowcount > 0 else None
+    cur.close()
     return reviews
-
 
 def insert_Customers(name, CPR_number, password):
     cur = conn.cursor()
@@ -204,7 +205,7 @@ def insert_User(email, password):
 
 def insert_Student(name, field, level, email):
     cur = conn.cursor()
-    print(name, field, level, email)
+    # print(name, field, level, email)
     sql = """
     INSERT INTO student (name, studies, bsc_msc, no_of_reviews, email)
     VALUES (%s, %s,%s,0,%s)

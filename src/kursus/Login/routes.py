@@ -5,7 +5,7 @@ from kursus import app, conn, bcrypt
 from kursus.forms import UserLoginForm, RegisterForm, SelectCourseForm
 from flask_login import login_user, current_user, logout_user, login_required
 from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student, get_Course, get_Course_id, get_reviews
-from kursus.models import select_cus_accounts
+from kursus.models import select_cus_accounts, obtain_avg
 #202212
 from kursus import roles, mysession
 
@@ -57,10 +57,10 @@ def register():
 def home():
     #202212
     mysession["state"]="home or /"
-    print(mysession)
+   # print(mysession)
     #202212
     role =  mysession["role"]
-    print('role: '+ role)
+    #print('role: '+ role)
     dis_courses = get_reviewed_courses()
     courses = map(lambda course: course[0], dis_courses)
 
@@ -71,7 +71,7 @@ def home():
 def about():
     #202212
     mysession["state"]="about"
-    print(mysession)
+    # print(mysession)
     return render_template('about.html', title='About')
 
 
@@ -80,7 +80,7 @@ def login():
 
     #202212
     mysession["state"]="login"
-    print(mysession)
+   # print(mysession)
     role=None
 
     # jeg tror det her betyder at man er er logget på, men har redirected til login
@@ -107,7 +107,7 @@ def login():
         # if user != None and bcrypt.check_password_hash(user[1], form.password.data):
         if user != None:
             mysession["email"] = form.email.data
-            print(mysession)
+            #print(mysession)
 
 
             login_user(user, remember=form.remember.data)
@@ -124,7 +124,7 @@ def login():
 def logout():
     #202212
     mysession["state"]="logout"
-    print(mysession)
+   # print(mysession)
 
     logout_user()
     return redirect(url_for('Login.home'))
@@ -134,7 +134,15 @@ def logout():
 def course_page():
     if request.method == 'POST':
         form = SelectCourseForm()
-        course_id = get_Course(form.course.data, '21/22')
-        reviews = get_reviews(course_id)
+        # course_id = get_Course(form.course.data, '22/23')
+        course_id = get_Course_id(form.course.data)
+        if course_id == None: 
+            flash('Course was not held this year', 'danger')
+            return redirect(url_for('Login.home'))
+        print(course_id[0])
+        reviews = get_reviews(course_id[0])
         print(reviews)
-    return render_template('review.html', title = form.course.data, code = course_id)
+        avgScores= [obtain_avg('clarity', course_id[0]),obtain_avg('easiness', course_id[0]),obtain_avg('workload', course_id[0]), obtain_avg('helpfulness', course_id[0]), obtain_avg('avg_rating', course_id[0])]
+        return render_template('review.html', title=form.course.data, code=course_id[0], reviews=reviews, avgScores=avgScores)
+    
+    return render_template('review.html')

@@ -1,11 +1,135 @@
 {% extends 'layout.html' %}
 
-{% block title %}{{ course.title }}{% endblock %}
+{% block title %}Reviews for - {{ title }}{% endblock %}
 
 {% block content %}
-  <div class="course-container">
-    <h1>{{ title }}</h1>
-    <p>Course Code: {{ code }}</p>
-    <!-- Add more course details as needed -->
-  </div>
+  <div class="reviews-container">
+    <div class="reviews">
+      <h2>Reviews for - {{ title }}</h2> <!-- Moved the title above the reviews -->
+      {% if reviews %}
+        {% for review in reviews %}
+          <div class="review">
+            <h3 class="review-title">{{ review[4] }}</h3>
+            <div class="score-details">
+              <p class="score-label">Helpfulness:</p>
+              <p class="score">{{ review[9] }}</p>
+              <p class="score-label">Easiness:</p>
+              <p class="score">{{ review[10] }}</p>
+              <p class="score-label">Clarity:</p>
+              <p class="score">{{ review[11] }}</p>
+              <p class="score-label">Workload:</p>
+              <p class="score">{{ review[12] }}</p>
+              <p class="score-label">Avg Rating:</p>
+              <p class="score">{{ review[13] }}</p>
+            </div>
+            <div class="review-text">
+              <p>{{ review[5] }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No reviews found.</p>
+      {% endif %}
+    </div>
+        <div class="average-scores">
+        <h2>Average Score: <span class="ovrscore">{{ "%.2f" % avgScores[4][0] }}</span></h2>
+        <p>Average Helpfulness: <span class="score">{{ "%.2f" % avgScores[3][0] }}</span></p>
+        <p>Average Easiness: <span class="score">{{ "%.2f" % avgScores[1][0] }}</span></p>
+        <p>Average Clarity: <span class="score">{{ "%.2f" % avgScores[0][0] }}</span></p>
+        <p>Average Workload: <span class="score">{{ "%.2f" % avgScores[2][0] }}</span></p>
+      </div>
+    </div>
+
+  <style>
+    .reviews-container {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px auto;
+      max-width: 1;
+      padding: 20px;
+      background-color: #f8f8f8;
+      border-radius: 5px;
+    }
+
+    .reviews-container h2 {
+      margin-bottom: 10px;
+    }
+
+    .average-scores {
+      width: 400px;
+      margin-left: 100px; /* Increased the margin */
+    }
+
+    .average-scores h2 {
+      margin-top: 0; /* Added margin top for the average scores title */
+      margin-bottom: 20px; /* Added margin top for the average scores title */
+    }
+
+    .average-scores p {
+      margin-bottom: 10px;
+      width: 400px;
+    }
+
+    .average-scores .score {
+      font-weight: bold;
+      color: #007bff;
+      text-align: right; /* Aligned the scores to the right */
+    }
+
+    .average-scores .ovrscore {
+      font-weight: bold;
+      color: #007bff;
+      text-align: right; /* Aligned the scores to the right */
+    }
+
+    .reviews {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .review {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      width: 600px;
+    }
+
+    .review-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .score-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .score-label {
+      margin: 0;
+    }
+
+    .score-details .score {
+      margin: 0;
+      margin-left: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #007bff;
+    }
+    .score-details .score-label {
+      margin: 0;
+      color: #8A8A8A;
+      font-size: 12px;
+    }
+
+    .review-text {
+      margin-top: 10px;
+    }
+  </style>
 {% endblock %}
