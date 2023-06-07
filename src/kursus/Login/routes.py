@@ -5,8 +5,8 @@ from kursus import app, conn, bcrypt
 from kursus.forms import UserLoginForm, RegisterForm, SelectCourseForm
 from flask_login import login_user, current_user, logout_user, login_required
 from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student, get_Course, get_Course_id, get_reviews
-from kursus.models import select_cus_accounts, obtain_avg
-#202212
+from kursus.models import obtain_avg
+
 from kursus import roles, mysession
 
 Login = Blueprint('Login', __name__)
@@ -55,24 +55,22 @@ def register():
 @Login.route("/")
 @Login.route("/home")
 def home():
-    #202212
+    student = select_Student(current_user.email)
     mysession["state"]="home or /"
-   # print(mysession)
-    #202212
-    role =  mysession["role"]
-    #print('role: '+ role)
+    # print(mysession)
     dis_courses = get_reviewed_courses()
     courses = map(lambda course: course[0], dis_courses)
-
-    return render_template('home.html', courses = courses)
+    
+    return render_template('home.html', courses = courses, name=student.get_name())
 
 
 @Login.route("/about")
 def about():
+    student = select_Student(current_user.email)
     #202212
     mysession["state"]="about"
     # print(mysession)
-    return render_template('about.html', title='About')
+    return render_template('about.html', title='About',  name=student.get_name())
 
 
 @Login.route("/login", methods=['GET', 'POST'])
@@ -139,9 +137,7 @@ def course_page():
         if course_id == None: 
             flash('Course was not held this year', 'danger')
             return redirect(url_for('Login.home'))
-        print(course_id[0])
         reviews = get_reviews(course_id[0])
-        print(reviews)
         avgScores= [obtain_avg('clarity', course_id[0]),obtain_avg('easiness', course_id[0]),obtain_avg('workload', course_id[0]), obtain_avg('helpfulness', course_id[0]), obtain_avg('avg_rating', course_id[0])]
         return render_template('review.html', title=form.course.data, code=course_id[0], reviews=reviews, avgScores=avgScores)
     

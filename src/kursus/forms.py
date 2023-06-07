@@ -27,23 +27,5 @@ class WriteReviewForm(FlaskForm):
     clarity = SelectField('Clarity', choices=[], validators=[DataRequired()])
     workload = SelectField('Workload', choices=[], validators=[DataRequired()])
 
-
-
-
 class SelectCourseForm(FlaskForm):
         course = SelectField('Course Name',  choices=[], validators=[DataRequired()])
-class TransferForm(FlaskForm):
-    amount = IntegerField('amount', 
-                        validators=[DataRequired()])
-    #sourceAccountTest = SelectField('From Account test:', choices=dropdown_choices, validators=[DataRequired()])
-    sourceAccount = SelectField('From Account:'  , choices=[], coerce = int, validators=[DataRequired()])
-    targetAccount = SelectField('Target Account:', choices=[], coerce = int, validators=[DataRequired()])
-    submit = SubmitField('Confirm')
-
-class DepositForm(FlaskForm):
-    amount = IntegerField('amount', 
-                       validators=[DataRequired()])
-    submit = SubmitField('Confirm')
-    
-class InvestForm(FlaskForm):
-    submit = SubmitField('Confirm')
