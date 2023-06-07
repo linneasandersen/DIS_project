@@ -1,9 +1,9 @@
 from os import remove
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from kursus import app, conn, bcrypt
-from kursus.forms import WriteReviewForm
+from kursus.forms import WriteReviewForm, DeletedReviewForm
 from flask_login import login_user, current_user, logout_user, login_required
-from kursus.models import Review, get_Course, select_Student, User, get_distinct_courses, insert_Review
+from kursus.models import Review, get_Course, select_Student, User, get_distinct_courses, insert_Review, delete_review
 
 from kursus import roles, mysession
 
@@ -53,3 +53,15 @@ def write():
     courses = map(lambda course: course[0], courses)
 
     return render_template('write.html', courses=courses, name=student.get_name())
+
+@User.route("/delete-review", methods=['GET', 'POST'])
+def delete():
+    if request.method == 'POST':
+        form = DeletedReviewForm(request.form)
+        review_id = form.review_id.data
+        print(review_id)
+        delete_review(review_id)
+        flash('Review deleted.','success')
+        return redirect(url_for('Login.profile'))
+
+    return render_template('about.html')

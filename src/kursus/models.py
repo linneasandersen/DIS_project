@@ -42,6 +42,9 @@ class Review(tuple):
         self.clarity = review_data[10]
         self.workload = review_data[11]
         self.avg_rating = review_data[12]
+
+    def get_id(self):
+        return self.course_id
     
 class Course(tuple, UserMixin):
     def __init__(self, course_data):
@@ -150,9 +153,33 @@ def get_Course(name, year):
 def get_Course_id(name):
     cur = conn.cursor()
     sql = f"SELECT DISTINCT course_id FROM COURSE WHERE" + """ "title english" """ +  f"= '{name}'"
-    cur.execute(sql, (name))
+    cur.execute(sql)
     course_id = cur.fetchone() if cur.rowcount > 0 else None;
     return course_id
+
+def delete_review(review_id):
+    cur = conn.cursor()
+    sql = f"DELETE FROM review WHERE review_id = '{review_id}'"
+    cur.execute(sql)
+    conn.commit()
+    cur.close()
+
+def get_Course_names(student_id):
+    cur = conn.cursor()
+    sql = f"""
+    SELECT DISTINCT review_id, author_id, r.course_id, r."year", title, text, no_of_upvotes, no_of_downvotes, date, helpfulness, easiness, clarity, workload, avg_rating, c."title english"
+    FROM review as r
+    INNER JOIN course as c
+    on r.author_id = '{student_id}' and r.course_id = c.course_id
+    ORDER BY "title english"
+    """
+    cur.execute(sql)
+    course_id = cur.fetchall() if cur.rowcount > 0 else None
+    return course_id
+
+
+   
+    
 
 def obtain_avg(param, c_id):
     cur = conn.cursor()
@@ -176,6 +203,14 @@ def insert_Review(author_id, course_id, year, title, text, date, helpfulness, ea
 def get_reviews(course_id):
     cur = conn.cursor()
     sql = f"SELECT * FROM review WHERE course_id = '{course_id}'"
+    cur.execute(sql)
+    reviews = cur.fetchall() if cur.rowcount > 0 else None
+    cur.close()
+    return reviews
+
+def get_personal_reviews(student_id):
+    cur = conn.cursor()
+    sql = f"SELECT * FROM review WHERE author_id = '{student_id}'"
     cur.execute(sql)
     reviews = cur.fetchall() if cur.rowcount > 0 else None
     cur.close()

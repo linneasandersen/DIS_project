@@ -5,7 +5,7 @@ from kursus import app, conn, bcrypt
 from kursus.forms import UserLoginForm, RegisterForm, SelectCourseForm
 from flask_login import login_user, current_user, logout_user, login_required
 from kursus.models import get_distinct_courses, get_reviewed_courses, select_Student, select_User, User, insert_User, insert_Student, get_Course, get_Course_id, get_reviews
-from kursus.models import obtain_avg
+from kursus.models import obtain_avg, get_personal_reviews, get_Course_names
 
 from kursus import roles, mysession
 
@@ -19,7 +19,10 @@ posts = [{}]
 @login_required
 def profile():
     student = select_Student(current_user.email)
-    return render_template('profile.html', name=student.get_name()) 
+    reviews = get_personal_reviews(student.get_id())
+    with_course_names = get_Course_names(student.get_id())
+   # print(with_course_names)
+    return render_template('profile.html', name=student.get_name(), reviews=reviews, course_names = with_course_names)
 
 @Login.route('/register', methods=('GET', 'POST'))
 def register():
@@ -55,13 +58,16 @@ def register():
 @Login.route("/")
 @Login.route("/home")
 def home():
-    student = select_Student(current_user.email)
+    student = None
+    if current_user.is_authenticated:
+        student = select_Student(current_user.email)
     mysession["state"]="home or /"
-    # print(mysession)
+
+
     dis_courses = get_reviewed_courses()
     courses = map(lambda course: course[0], dis_courses)
     
-    return render_template('home.html', courses = courses, name=student.get_name())
+    return render_template('home.html', courses = courses, name = student.get_name() if student != None else None)
 
 
 @Login.route("/about")
@@ -130,15 +136,15 @@ def logout():
 
 @Login.route('/course', methods=['GET', 'POST'])
 def course_page():
+    student = select_Student(current_user.email)
     if request.method == 'POST':
         form = SelectCourseForm()
-        # course_id = get_Course(form.course.data, '22/23')
         course_id = get_Course_id(form.course.data)
         if course_id == None: 
-            flash('Course was not held this year', 'danger')
+            flash('Please select a course dummy', 'danger')
             return redirect(url_for('Login.home'))
         reviews = get_reviews(course_id[0])
         avgScores= [obtain_avg('clarity', course_id[0]),obtain_avg('easiness', course_id[0]),obtain_avg('workload', course_id[0]), obtain_avg('helpfulness', course_id[0]), obtain_avg('avg_rating', course_id[0])]
-        return render_template('review.html', title=form.course.data, code=course_id[0], reviews=reviews, avgScores=avgScores)
+        return render_template('review.html', title=form.course.data, code=course_id[0], reviews=reviews, avgScores=avgScores, name = student.get_name())
     
     return render_template('review.html')

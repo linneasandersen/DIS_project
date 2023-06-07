@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 
 class RegisterForm(FlaskForm):
@@ -29,3 +29,7 @@ class WriteReviewForm(FlaskForm):
 
 class SelectCourseForm(FlaskForm):
         course = SelectField('Course Name',  choices=[], validators=[DataRequired()])
+
+class DeletedReviewForm(FlaskForm):
+        review = SubmitField('Delete')
+        review_id = HiddenField('review_id')
