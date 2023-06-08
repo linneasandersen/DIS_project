@@ -7,12 +7,10 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'fc089b9218301ad987914c53481bff04'
 
-# set your own database here
-db = "dbname='postgres' user='superbruger' host='127.0.0.1' password = 'dis'"
+db = "dbname='projectgroup6' user='superbruger' host='127.0.0.1' password = 'dis'"
 conn = psycopg2.connect(db)
 
 bcrypt = Bcrypt(app)
-
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
