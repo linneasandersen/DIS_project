@@ -6,17 +6,13 @@ This project enables people to see KU courses and how they are reviewed by stude
 
 1. Run schema.sql
 
-
 ## Initialize virtual environment
 
 > $ init.sh
 
-
-
 ## Run
 
 > $ flask run
-
 
 Should the above not work, follow these commands step-by-step:
 
@@ -64,3 +60,16 @@ We have a lot of ideas regarding how to further improve the website:
 We are also aware of a bug:
 
 * On the 'write a review'-page when the user is prompted to choose which course to review, we select distinct course names, meaning that if two different courses have the same English title, they are displayed only as one. This causes some problems, but the scope is small.
+
+## E/R diagram
+
+As specified in our E/R diagram, we have omitted the full list of attributes for the course table since it is very long. In full, the course table contains the following attributes:
+course_id, "description language", "language of instruction", "title danish", "title english",
+                    cancelled, level, "board of studies", "responsible institute", "participating institute",
+                    "names of course responsible", "emails of course responsible", "lecturers danish ",
+                    "lecturers english", length, "temporal placement", "schedule group", "method of teaching danish",
+                    "method of teaching english", "formal requirements danish", "formal requirements english",
+                    "academic prerequisites danish", "academic prerequisites english", "course notes danish",
+                    "course notes english", "ECTS of exam", "exam requirements for registration danish",
+                    "exam requirements for registration english", "test form of exam", "length of exam danish",
+                    "length of exam english", "exam aids", faculty, "year"

@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'fc089b9218301ad987914c53481bff04'
 
-db = "dbname='projectgroup6' user='superbruger' host='127.0.0.1' password = 'dis'"
+db = "dbname='postgres' user='superbruger' host='127.0.0.1' password = 'dis'"
 conn = psycopg2.connect(db)
 
 bcrypt = Bcrypt(app)
