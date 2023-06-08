@@ -4,13 +4,32 @@ This project enables people to see KU courses and how they are reviewed by stude
 
 ## Initialize the database
 
-1. Run schema.sql
+1. Make sure you have a superuser called 'superbruger' with password 'dis'
+2. Make sure you have a database called 'postgres'
+3. Find your way to ../DIS_PROJECT/src/kursus
+4. Run:
+
+> $ psql -U superbruger -d postgres -f schema.sql
+
+Alternatively, you can set the database in src/__init__.py in line 10 and then run:
+
+> $ psql -U your_user_name -d your_db_name -f schema.sql
 
 ## Initialize virtual environment
 
-> $ init.sh
+Run the following from ../DIS_PROJECT/
 
-## Run
+> $ bash init.sh
+
+## Run the website
+
+Run
+
+> $ cd src
+
+> $ . .venv/bin/activate
+
+> $ export FLASK_APP=run.py
 
 > $ flask run
 
@@ -44,7 +63,7 @@ For Windows you may have to use the SET command instead of EXPORT. Ex set FLASK_
 
 1. Open a browser and go to 127.0.0.1:5000. We recommend Chrome.
 2. On the front page, you can choose a course for which to see reviews
-3. To create a review, you must be logged in. Use the register form or log in using the following email: test@alumni.ku.dk and password: testuser
+3. To create a review, you must be logged in. Use the register form or log in using the following email: admin@alumni.ku.dk and password: qwerty
 4. You can now create a review and see your own reviews
 
 ## Further improvements and known bugs
@@ -56,6 +75,8 @@ We have a lot of ideas regarding how to further improve the website:
 * Approving reviews. In order to avoid harmful language, it would be a good idea to approve each review before it is posted.
 * Adding more roles. We would need to have admin users to e.g. be able to approve reviews.
 * When selecting a course on the 'write a review'-page and on the front page, we would like to have a searchable drop down menu, since there are a lot of courses.
+* Upvotes and downvotes for reviews.
+* Incrementing the no_of_reviews attribute in the student table
 
 We are also aware of a bug:
 
@@ -64,12 +85,37 @@ We are also aware of a bug:
 ## E/R diagram
 
 As specified in our E/R diagram, we have omitted the full list of attributes for the course table since it is very long. In full, the course table contains the following attributes:
-course_id, "description language", "language of instruction", "title danish", "title english",
-                    cancelled, level, "board of studies", "responsible institute", "participating institute",
-                    "names of course responsible", "emails of course responsible", "lecturers danish ",
-                    "lecturers english", length, "temporal placement", "schedule group", "method of teaching danish",
-                    "method of teaching english", "formal requirements danish", "formal requirements english",
-                    "academic prerequisites danish", "academic prerequisites english", "course notes danish",
-                    "course notes english", "ECTS of exam", "exam requirements for registration danish",
-                    "exam requirements for registration english", "test form of exam", "length of exam danish",
-                    "length of exam english", "exam aids", faculty, "year"
+
+* course_id
+* description language
+* language of instruction
+* title danish
+* title english
+* cancelled, level
+* board of studies
+* responsible institute
+* participating institute
+* names of course responsible
+* emails of course responsible
+* lecturers danish
+* lecturers english
+* length
+* temporal placement
+* schedule group
+* method of teaching danish
+* method of teaching english
+* formal requirements danish
+* formal requirements english
+* academic prerequisites danish
+* academic prerequisites english
+* course notes danish
+* course notes english
+* ECTS of exam
+* exam requirements for registration danish
+* exam requirements for registration english
+* test form of exam
+* length of exam danish
+* length of exam english
+* exam aids
+* faculty
+* year
