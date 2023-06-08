@@ -1,5 +1,4 @@
 # write all your SQL queries in this file.
-from datetime import datetime
 from kursus import conn, login_manager
 from flask_login import UserMixin
 from psycopg2 import sql
@@ -18,7 +17,6 @@ def load_user(email):
         return User(cur.fetchone())
     else:
         return None
-
 class User(tuple, UserMixin):
     def __init__(self, user_data):
         self.email = user_data[0]
@@ -26,7 +24,6 @@ class User(tuple, UserMixin):
 
     def get_id(self):
        return (self.email)
-
 class Review(tuple): 
     def __init__(self, review_data):
         self.author_id = review_data[0]
@@ -45,7 +42,6 @@ class Review(tuple):
 
     def get_id(self):
         return self.course_id
-    
 class Course(tuple, UserMixin):
     def __init__(self, course_data):
         self.course_id = course_data[0]
@@ -57,48 +53,6 @@ class Course(tuple, UserMixin):
     
     def get_name(self):
         return self.name 
-class Customers(tuple, UserMixin):
-    def __init__(self, user_data):
-        self.CPR_number = user_data[0]
-        self.risktype = False
-        self.password = user_data[2]
-        self.name = user_data[3]
-        self.address = user_data[4]
-        self.role = "customer"
-
-    def get_id(self):
-       return (self.CPR_number)
-
-class Employees(tuple, UserMixin):
-    def __init__(self, employee_data):
-        self.id = employee_data[0]
-        self.name = employee_data[1]
-        self.password = employee_data[2]
-        self.role = "employee"
-
-    def get_id(self):
-       return (self.id)
-
-class CheckingAccount(tuple):
-    def __init__(self, user_data):
-        self.id = user_data[0]
-        self.create_date = user_data[1]
-        self.CPR_number = user_data[2]
-        self.amount = 0
-
-class InvestmentAccount(tuple):
-    def __init__(self, user_data):
-        self.id = user_data[0]
-        self.start_date = user_data[1]
-        self.maturity_date = user_data[2]
-        self.amount = 0
-
-class Transfers(tuple):
-    def __init__(self, user_data):
-        self.id = user_data[0]
-        self.amount = user_data[1]
-        self.transfer_date = user_data[2]
-        
 class Student(tuple,UserMixin):
     def __init__(self, student_data):
         self.id = student_data[0]
@@ -153,7 +107,7 @@ def get_Course(name, year):
 def get_Course_id(name):
     cur = conn.cursor()
     #sql = f"SELECT DISTINCT course_id FROM COURSE WHERE" + """ "title english" """ +  f"= '{name}' AND" + """ "title english" """ + " = "  """ "title danish" """
-    sql = f'SELECT DISTINCT course_id FROM COURSE WHERE "title english" = \'{name}\' AND "title english" = "title danish"'
+    sql = f'SELECT DISTINCT course_id FROM COURSE WHERE "title english" = \'{name}\''
     cur.execute(sql)
     course_id = cur.fetchone() if cur.rowcount > 0 else None;
     return course_id
@@ -178,9 +132,6 @@ def get_Course_names(student_id):
     course_id = cur.fetchall() if cur.rowcount > 0 else None
     return course_id
 
-
-   
-    
 
 def obtain_avg(param, c_id):
     cur = conn.cursor()
