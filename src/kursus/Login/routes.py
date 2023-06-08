@@ -143,6 +143,7 @@ def course_page():
         if course_id == None: 
             flash('Please select a course dummy', 'danger')
             return redirect(url_for('Login.home'))
+
         reviews = get_reviews(course_id[0])
         avgScores= [obtain_avg('clarity', course_id[0]),obtain_avg('easiness', course_id[0]),obtain_avg('workload', course_id[0]), obtain_avg('helpfulness', course_id[0]), obtain_avg('avg_rating', course_id[0])]
         return render_template('review.html', title=form.course.data, code=course_id[0], reviews=reviews, avgScores=avgScores, name = student.get_name())

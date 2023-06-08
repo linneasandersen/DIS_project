@@ -152,7 +152,8 @@ def get_Course(name, year):
 
 def get_Course_id(name):
     cur = conn.cursor()
-    sql = f"SELECT DISTINCT course_id FROM COURSE WHERE" + """ "title english" """ +  f"= '{name}'"
+    #sql = f"SELECT DISTINCT course_id FROM COURSE WHERE" + """ "title english" """ +  f"= '{name}' AND" + """ "title english" """ + " = "  """ "title danish" """
+    sql = f'SELECT DISTINCT course_id FROM COURSE WHERE "title english" = \'{name}\' AND "title english" = "title danish"'
     cur.execute(sql)
     course_id = cur.fetchone() if cur.rowcount > 0 else None;
     return course_id
